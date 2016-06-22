@@ -1,0 +1,15 @@
+<div class = "row">
+  <div class = "col-xs-6 col-xs-offset-3">
+  <h1>Contacts</h1>
+  <ul>
+    {{#each contacts}}
+      <li>{{name}}
+        <a class = 'btn btn-default' name = 'send' href="/newMessages/{{_id}}">Send Text</a>
+        <a class = 'btn btn-default' name = 'view' href="/messages/{{_id}}">View Messages</a>
+        <a class = 'btn btn-default' name = 'edit' href="/contacts/{{_id}}">Edit Contact</a>
+      <li>{{phone}}
+    {{/each}}
+  </ul>
+  <a href = "/contacts/new" class="btn btn-primary">Add Contact</a>
+</div>
+<div>

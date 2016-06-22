@@ -1,0 +1,11 @@
+<div class = "row">
+  <div class = "col-xs-6 col-xs-offset-3">
+    <h1>Your Conversation with {{contact}}</h1>
+      {{#each messages}}
+      <div>
+        <p>Sent to {{contact}} via text: {{created}}</p>
+        <p>{{content}}</p>
+      </div>
+      {{/each}}
+ </div>
+</div>
