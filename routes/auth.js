@@ -6,11 +6,11 @@ var User = models.User;
 
 module.exports = function(passport) {
     // Add Passport-related auth routes here, to the router!
-    router.get('/', function(req, res, next) {
-      if (req.isAuthenticated()) {
-        res.redirect('/contacts');
-      } res.redirect('/login');
-    });
+    // router.get('/', function(req, res, next) {
+    //   if (req.isAuthenticated()) {
+    //     res.redirect('/contacts');
+    //   } res.redirect('/login');
+    // });
 
     router.get('/signup', function(req, res, next) {
       res.render('signup');
@@ -43,23 +43,22 @@ module.exports = function(passport) {
     res.render('login');
   });
 
-  // router.post('/login', passport.authenticate('local', {successRedirect: '/contacts',
-  // failureRedirect: '/login' }));
-
   router.post('/login', passport.authenticate('local'), function(req, res){
     console.log(User)
     res.redirect("/contacts");
   });
-  //
-  // router.post('/login', function(req, res, next) {
-  //   var nextStep = passport.authenticate('local', { successRedirect: '/',
-  //    failureRedirect: '/login'}, function(a, b, c, d) {
-  //      console.log("Got error: " + a + b + JSON.stringify(c) + d);
-  //    });
-  //    nextStep(req, res, next);
-  // });
 
-  // router.post('/login', );
+
+  //FACEBOOK
+  router.get('/auth/facebook', passport.authenticate('facebook'));
+
+  router.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/login' }),
+    function(req, res) {
+      // Successful authentication, redirect home.
+      res.redirect('/');
+    });
+
 
   return router;
 }

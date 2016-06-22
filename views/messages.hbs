@@ -1,11 +1,19 @@
 <div class = "row">
   <div class = "col-xs-6 col-xs-offset-3">
-    <h1>Your Conversation with {{contact}}</h1>
+    <h1>Message with {{contact.name}}</h1>
+    <a type="submit" class="btn btn-primary" href = "/messages/{{contact._id}}">View message</a>
       {{#each messages}}
+      {{#if you}}
       <div>
-        <p>Sent to {{contact}} via text: {{created}}</p>
+        <p>Sent to {{contact.name}} via text: {{created}}</p>
         <p>{{content}}</p>
       </div>
+      {{else}}
+      <div style="background: yellow">
+        <p>Sent to {{contact.name}} via text: {{created}}</p>
+        <p>{{content}}</p>
+      </div>
+      {{/if}}
       {{/each}}
  </div>
 </div>

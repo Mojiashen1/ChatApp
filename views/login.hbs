@@ -12,6 +12,15 @@
        <input name = 'password' type="text" class="form-control" placeholder="password" value = '{{signup.password}}' required>
      </div>
      <button type="submit" class="btn btn-primary">Login</button>
+     <button type="submit" class="btn btn-primary" id = "fbLogin">Login with Facebook</button>
    </form>
  </div>
 </div>
+
+
+<script>
+  $(#fbLogin).click(function(e) {
+    e.preventDefault();
+    window.location.href = '/auth/facebook'
+  })
+</script>
