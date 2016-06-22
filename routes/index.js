@@ -122,6 +122,8 @@ router.post('/newMessages/:contactId', function(req, res) {
       from: '+16693330850 ', // A number you bought from Twilio and can use for outbound communication
       body: 'Test message' // body of the SMS message
 
+//make this hidden in newMessage
+
   }, function(err, responseData) { //this function is executed when a response is received from Twilio
 
       if (!err) { // "err" is an error received during the request, if any
@@ -156,6 +158,54 @@ router.post('/messages/receive', function(req, res) {
   req.body.From
 });
 
+router.get('/messages/sendScheduled', function(req, res) {
+  Message.find(function(req, res) {
+    if (req.body.status === 'scheduled') {
+      var client = require('twilio')(ACCOUNT_SID, ACCOUNT_TOKEN);
+
+      //Send an SMS text message
+      if (req.body.timeToSend < new Date()) {
+      client.sendMessage({
+
+          to: '+17132542259', // Any number Twilio can deliver to
+          from: '+16693330850 ', // A number you bought from Twilio and can use for outbound communication
+          body: 'Test message' // body of the SMS message
+
+    //make this hidden in newMessage
+
+      }, function(err, responseData) { //this function is executed when a response is received from Twilio
+
+          if (!err) { // "err" is an error received during the request, if any
+
+              // "responseData" is a JavaScript object containing data received from Twilio.
+              // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
+              // http://www.twilio.com/docs/api/rest/sending-sms#example-1
+
+              console.log(responseData.from); // outputs "+14506667788"
+              console.log(responseData.body); // outputs "word to your mother."
+              var m = new Message({
+                created: new Date(),
+                content: req.body.message,
+                user: req.user._id,
+                contact: req.body.contactId
+              })
+              m.save(function(error) {
+                if (error) {
+                  res.status(400).send(error);
+                } else {
+                  res.redirect('/messages')
+                }
+              })
+              m.status = 'sent';
+              res.send('Success!');
+          } else {
+            res.status(500).send('Error sending')
+          }
+        });
+      }
+    }
+  })
+})
 
 
 module.exports = router;
