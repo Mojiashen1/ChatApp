@@ -6,11 +6,11 @@ var User = models.User;
 
 module.exports = function(passport) {
     // Add Passport-related auth routes here, to the router!
-    // router.get('/', function(req, res, next) {
-    //   if (req.isAuthenticated()) {
-    //     res.redirect('/contacts');
-    //   } res.redirect('/login');
-    // });
+    router.get('/', function(req, res, next) {
+      if (req.isAuthenticated()) {
+        res.redirect('/');
+      } res.redirect('/login');
+    });
 
     router.get('/signup', function(req, res, next) {
       res.render('signup');
@@ -45,7 +45,7 @@ module.exports = function(passport) {
 
   router.post('/login', passport.authenticate('local'), function(req, res){
     console.log(User)
-    res.redirect("/contacts");
+    res.redirect("/");
   });
 
 

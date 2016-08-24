@@ -197,34 +197,80 @@ router.post('/newMessages/:contactId', function(req, res, next) {
   })
 })
 
+//utility function
+var saveMessage = function(message, cb) {
+  message.save(function(err, message){
+    if (err) return next(err);
+    cb(message);
+  })
+}
 
-// router.get('/messages/sendScheduled', function(req, res) {
-//   Message.find(function(req, res) {
-//     if (req.body.status === 'scheduled') {
-//       Contact.findById(req.params.id, function(err, responseContact) {
-//         twilio.messages.create({
-//           to: responseContact.phone,
-//           from: fromPhone,
-//           body: req.body.message
-//       }, function(err, responseData) { //this function is executed when a response is received from Twilio
-//
-//           if (!err) { // "err" is an error received during the request, if any
-//
-//               // "responseData" is a JavaScript object containing data received from Twilio.
-//               // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
-//               // http://www.twilio.com/docs/api/rest/sending-sms#example-1
-//
-//               console.log(responseData.from); // outputs "+14506667788"
-//               console.log(responseData.body); // outputs "word to your mother."
-//               var m = new Message({
-//                 created: new Date(),
-//                 content: req.body.message,
-//                 user: responseContact._id,
-//                 contact: req.body.contactId,
-//                 status: 'sent',
-//                 from: fromPhone,
-//                 timeToSend: null
-//               })
+var createMessage = function(req, contact, initialStatus) {
+  return new Message({
+    created: new Date(),
+    content: req.body.message,
+    user: req.user._id,
+    from: fromPhone,
+    status: initialStatus
+  })
+}
+
+// new Date(Date.now() +10000) //10 sec from now
+router.get('/message/send/:id', function(req, res, next) {
+  ContactfindById(req.params.id, function(err, responseContact) {
+    if (err) return (err);
+    if (req.body.delay == 'on') {
+
+    }
+  })
+})
+router.get('/messages/sendScheduled', function(req, res) {
+  Contact.findNyId(req.params.id, function(req, res next) {
+
+  // Message.find({status: 'scheduled'}, function(req, res) {
+    if (err) return next(err)
+    var status = '';
+    if(req.body.delay === 'on') {
+      status = 'scheduled';
+      return saveMessage({
+        created: new Date(),
+        content: req.body.message,
+        user: req.user._id,
+        from: fromPhone,
+        status: status
+      }, function(){
+        res.redirect('/messages/' + req.params.id)
+      })
+    } else {
+      status = 'sending';
+      return saveMessage({
+        created: new Date(),
+        content: req.body.message,
+        user: req.user._id,
+        from: fromPhone,
+        status: status
+      }, function(message){
+        msg = message;
+      })
+    }
+    twilio.messages.create({
+      to: responseContact.phone,
+      from: fromPhone,
+      body: req.body.message
+  }, function(err, responseData) {
+    if (err) return next(err);
+
+
+    if (req.body.status === 'scheduled') {
+      Contact.findById(req.params.id, function(err, responseContact) {
+        twilio.messages.create({
+          to: responseContact.phone,
+          from: fromPhone,
+          body: req.body.message
+      }, function(err, responseData) { //this function is executed when a response is received from Twilio
+
+          if (!err) { // "err" is an error received during the request, if any
+
 //               m.save(function(error) {
 //                 if (error) {
 //                   res.status(400).send(error);
